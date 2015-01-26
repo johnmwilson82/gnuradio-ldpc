@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+# FEC LDPC DECODER
+###################################################
+ -->
+<block>
+    <name>LDPC Decoder Definition</name>
+    <key>variable_ldpc_decoder_def</key>
+    <category>LDPC</category>
+    <import>import ldpc</import>
+    <var_make>
+#if int($ndim())==0 #
+self.$(id) = $(id) = ldpc.ldpc_decoder($filename, $num_iterations, $message_length)
+#else if int($ndim())==1 #
+self.$(id) = $(id) = map( (lambda a: ldpc.ldpc_decoder($filename, $num_iterations, $message_length)), range(0,$dim1) ); #slurp
+#else
+self.$(id) = $(id) = map( (lambda b: map( ( lambda a: ldpc.ldpc_decoder($filename, $num_iterations, $message_length)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
+#end if
+    </var_make>
+    <var_value>ldpc.ldpc_decoder($filename, $num_iterations, $message_length)</var_value>
+    <make></make>
+
+    <param>
+        <name>Parallelism</name>
+        <key>ndim</key>
+        <value>0</value>
+        <type>enum</type>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>1</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Dimension 1</name>
+        <key>dim1</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Dimension 2</name>
+        <key>dim2</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>.pcmat filename</name>
+        <key>filename</key>
+        <value>''</value>
+        <type>file_open</type>
+    </param>
+
+    <param>
+        <name>Max iterations</name>
+        <key>num_iterations</key>
+        <value>50</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Message length</name>
+        <key>message_length</key>
+        <value>0</value>
+        <type>int</type>
+    </param>
+
+    <doc>
+    </doc>
+</block>
