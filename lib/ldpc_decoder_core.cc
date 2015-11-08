@@ -110,8 +110,8 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         if(H->parity_check(chat) == 0)
         {
 
-            fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
-            fflush(stdout);
+            //fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
+            //fflush(stdout);
             num_decoded++;
             d_was_decoded = true;
             //TODO: need to output posterior probs
