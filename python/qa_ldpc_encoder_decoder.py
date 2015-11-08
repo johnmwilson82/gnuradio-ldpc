@@ -3,6 +3,8 @@ from gnuradio import blocks
 import ldpc_swig as ldpc
 import numpy as np
 import sys, numpy
+import timeit
+import functools
 
 from gnuradio.fec import extended_encoder
 from gnuradio.fec import extended_decoder
@@ -50,6 +52,7 @@ class _qa_helper(gr.top_block):
         self.connect(self.unpack, self.snk_input)
         self.connect(self.ext_decoder, self.snk_output)
 
+
 class qa_ldpc_encode_decode (gr_unittest.TestCase):
 
     def setUp(self):
@@ -58,19 +61,37 @@ class qa_ldpc_encode_decode (gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001_basic_operation(self):
-        enc = ldpc.ldpc_encoder('../../examples/408.pmat')
-        dec = ldpc.ldpc_decoder('../../examples/408.pcmat', 50, 204)
-
+    def check_coders(self, enc, dec):
         threading = None
         self.test = _qa_helper(204, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in  = self.test.snk_input.data()
 
-        self.assertEqual(data_in, data_out)
+        return data_out == data_in
+
+    def test_001_basic_operation(self):
+        enc = ldpc.ldpc_encoder('../../examples/408.pmat')
+        dec = ldpc.ldpc_decoder('../../examples/408.pcmat', 50, 204)
+
+        self.assertTrue(self.check_coders(enc, dec))
+        time = timeit.timeit(functools.partial(
+            self.check_coders, enc=enc, dec=dec), number=10)
+        print "ldpc time = " + str(time)
+
+    def test_002_gnuradio_decoder(self):
+        from gnuradio.fec import ldpc_encoder_make as gnuradio_ldpc_encoder
+        from gnuradio.fec import ldpc_decoder_make as gnuradio_ldpc_decoder
+        enc = gnuradio_ldpc_encoder('../../examples/408.alist')
+        dec = gnuradio_ldpc_decoder('../../examples/408.alist')
+
+        self.assertTrue(self.check_coders(enc, dec))
+        time = timeit.timeit(functools.partial(
+            self.check_coders, enc=enc, dec=dec), number=10)
+        print "gnuradio ldpc time = " + str(time)
+
 
 if __name__ == '__main__':
     gr_unittest.run(qa_ldpc_encode_decode, "qa_ldpc_encode_decode.xml")
