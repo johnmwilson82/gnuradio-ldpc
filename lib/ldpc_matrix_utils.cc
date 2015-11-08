@@ -48,7 +48,7 @@ vector<unsigned char> ldpc_p_matrix::encode_ldpc(vector<unsigned char> message)
     return codeword;
 }
 
-inline void
+void
 ldpc_p_matrix::encode_ldpc(vector<unsigned char> message, unsigned char *codeword)
 {
     int temp;

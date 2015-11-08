@@ -51,7 +51,9 @@ namespace gr {
 
       void ldpc_decoder_impl::decode (std::vector<float> codeword, unsigned char *out)
       {
-          d_decoder.decode_ldpc(codeword, d_num_iterations, out);
+          unsigned char out_codeword[d_codeword_length];
+          d_decoder.decode_ldpc(codeword, d_num_iterations, out_codeword);
+          memcpy(out, &out_codeword[d_codeword_length-d_message_length], d_message_length);
           d_posterior_llrs = d_decoder.get_posteriors();
       }
 
@@ -81,9 +83,9 @@ namespace gr {
         if (d_circbuff_in.size() >= d_codeword_length) {
           static int i = 0;
           i += 1;
-          GR_LOG_INFO(d_logger, boost::format("decoder i = %1%, %2%") \
+          /*GR_LOG_INFO(d_logger, boost::format("decoder i = %1%, %2%") \
                   % i % (int)(d_frame_size * 1.0/d_rate * sizeof(unsigned char)));
-          GR_LOG_INFO(d_logger, boost::format("decder ?? %1%") % (int)d_circbuff_in.size());
+          GR_LOG_INFO(d_logger, boost::format("decder ?? %1%") % (int)d_circbuff_in.size());*/
 
           // We have enough elements now so decode a message
           std::vector<float> codeword(d_circbuff_in.begin(),

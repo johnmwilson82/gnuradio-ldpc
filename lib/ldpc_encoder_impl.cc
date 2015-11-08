@@ -77,7 +77,7 @@ namespace gr {
         if (d_circbuff_in.size() >= d_message_length) {
           static int i = 0;
           i += 1;
-          GR_LOG_INFO(d_logger, boost::format("encoder %d") % i);
+          // GR_LOG_INFO(d_logger, boost::format("encoder %d") % i);
 
           // We have enough elements now so decode a message
           std::vector<unsigned char> message(d_circbuff_in.begin(),

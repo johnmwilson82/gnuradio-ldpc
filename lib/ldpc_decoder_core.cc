@@ -96,7 +96,7 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
             for(int j = 0; j < H->get_number_of_indices_in_col(i); j++)
                 ppr[i] += dpr[i][H->get_indices_for_col(i)[j]];
 
-            if(ppr[i] < 0) chat[i] = 1; else chat[i] = 0;
+            if(ppr[i] < 0) chat[i] = 0; else chat[i] = 1;
             cwtot += chat[i];
         }
 
