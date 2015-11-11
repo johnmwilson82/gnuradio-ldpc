@@ -1,4 +1,5 @@
 #include "ldpc_decoder_core.h"
+#include <gnuradio/math.h>
 #include <math.h>
 #include <cmath>
 #include <stdio.h>
@@ -74,10 +75,8 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
             {
                 float temp = tanh_half_u[j] / tanh(dcq[H->get_indices_for_row(j)[a]][j]/2.0);
 
-                if(abs(temp) > 0.99999)
-                {
-                    if(signbit(temp)) temp = -0.99999; else temp = 0.99999;
-                }
+                temp = gr::branchless_clip(temp, 0.99999);
+
                 if(temp == 0)
                 {
                     temp = 1e-10;
@@ -96,7 +95,7 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
             for(int j = 0; j < H->get_number_of_indices_in_col(i); j++)
                 ppr[i] += dpr[i][H->get_indices_for_col(i)[j]];
 
-            if(ppr[i] < 0) chat[i] = 0; else chat[i] = 1;
+            if(ppr[i] < 0) chat[i] = 1; else chat[i] = 0;
             cwtot += chat[i];
         }
 
@@ -110,8 +109,8 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         if(H->parity_check(chat) == 0)
         {
 
-            //fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
-            //fflush(stdout);
+            fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
+            fflush(stdout);
             num_decoded++;
             d_was_decoded = true;
             //TODO: need to output posterior probs

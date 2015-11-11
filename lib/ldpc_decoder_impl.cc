@@ -3,6 +3,7 @@
 #endif
 
 #include "ldpc_decoder_impl.h"
+#include <gnuradio/math.h>
 #include <assert.h>
 #include <stdexcept>
 #include <string.h>
@@ -49,9 +50,33 @@ namespace gr {
       {
       }
 
+      std::vector<float> ldpc_decoder_impl::prob_to_llr(std::vector<float> codeword)
+      {
+          std::vector<float> out(codeword);
+          for(int i = 0; i < out.size(); i++)
+          {
+              float cw = codeword[i];
+
+              // Following two lines ruin test for some bizzare reason
+              if (cw < 0.0001)
+                  cw = 0.0001;
+
+              if (cw > 0.9999)
+                  cw = 0.9999;
+
+              out[i] = log((1-cw)/cw);
+
+              if (i < 1)
+                fprintf(stdout, "%f, ", codeword[i]);
+              fflush(stdout);
+          }
+          return out;
+      }
+
       void ldpc_decoder_impl::decode (std::vector<float> codeword, unsigned char *out)
       {
           unsigned char out_codeword[d_codeword_length];
+          codeword = prob_to_llr(codeword);
           d_decoder.decode_ldpc(codeword, d_num_iterations, out_codeword);
           memcpy(out, &out_codeword[d_codeword_length-d_message_length], d_message_length);
           d_posterior_llrs = d_decoder.get_posteriors();

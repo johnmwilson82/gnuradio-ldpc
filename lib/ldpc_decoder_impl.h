@@ -41,6 +41,7 @@ namespace gr {
         void set_num_iterations(int num_iterations) {
             d_num_iterations = num_iterations; };
 
+        std::vector<float> prob_to_llr(std::vector<float> codeword);
         void decode (std::vector<float> codeword, unsigned char* out);
 
         std::vector<float> get_posterior_llrs();
