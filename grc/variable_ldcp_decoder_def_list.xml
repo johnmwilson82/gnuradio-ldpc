@@ -5,8 +5,8 @@
 ###################################################
  -->
 <block>
-    <name>LDPC Decoder Definition</name>
-    <key>variable_ldpc_decoder_def</key>
+    <name>John's LDPC Decoder Definition</name>
+    <key>variable_johns_ldpc_decoder_def</key>
     <category>LDPC</category>
     <import>import ldpc</import>
     <var_make>
