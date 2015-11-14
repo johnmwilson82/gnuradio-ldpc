@@ -30,7 +30,7 @@ public:
     int d_num_cols;
 
     //void load_parity_checks_from_file(const char* filename);
-    std::vector<int> get_checks_indices(int row_num) { //returns a vector containing parity checks for that row
+    const std::vector<int> & get_checks_indices(int row_num) { //returns a vector containing parity checks for that row
                                 assert(row_num >= 0 && row_num < (int)d_checks.size());
                                 return d_checks[row_num];
                                 }
@@ -68,11 +68,11 @@ public:
 
     ~ldpc_parity_check_matrix();
 
-    std::vector<int> get_indices_for_row(int row_num){  assert(row_num >= 0 && row_num < (int)d_rows.size());
+    const std::vector<int> & get_indices_for_row(int row_num){  assert(row_num >= 0 && row_num < (int)d_rows.size());
                                 return d_rows[row_num];
                                 };
 
-    std::vector<int> get_indices_for_col(int col_num){  assert(col_num >= 0 && col_num < (int)d_cols.size());
+    const std::vector<int> & get_indices_for_col(int col_num){  assert(col_num >= 0 && col_num < (int)d_cols.size());
                                 return d_cols[col_num];
                                 };
 
@@ -112,7 +112,7 @@ public:
     int d_row_ptr;
 
     //void load_parity_checks_from_file(const char* filename);
-    std::vector<int> get_checks_indices(int row_num) { //returns a vector containing parity checks for that row
+    const std::vector<int> & get_checks_indices(int row_num) { //returns a vector containing parity checks for that row
                                 assert(row_num >= 0 && row_num < (int)d_checks.size());
                                 return d_checks[row_num];
                                 }
