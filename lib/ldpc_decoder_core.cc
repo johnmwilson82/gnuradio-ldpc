@@ -75,12 +75,9 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
             {
                 float temp = tanh_half_u[j] / tanh(dcq[H->get_indices_for_row(j)[a]][j]/2.0);
 
-                temp = gr::branchless_clip(temp, 0.99999);
-
                 if(temp == 0)
                 {
                     temp = 1e-10;
-                    fprintf(stdout, "Warning, zero dcq, substituted\n");
                 }
 
                 dpr[H->get_indices_for_row(j)[a]][j] = 2 * atanh(temp);
@@ -109,8 +106,8 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         if(H->parity_check(chat) == 0)
         {
 
-            fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
-            fflush(stdout);
+            //fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
+            //fflush(stdout);
             num_decoded++;
             d_was_decoded = true;
             //TODO: need to output posterior probs
@@ -119,8 +116,8 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         }
 
     }
-    fprintf(stdout, "Failed decoding LDPC packet %d\n", num_decoded);
-    fflush(stdout);
+    //fprintf(stdout, "Failed decoding LDPC packet %d\n", num_decoded);
+    //fflush(stdout);
     d_was_decoded = false;
 
 }

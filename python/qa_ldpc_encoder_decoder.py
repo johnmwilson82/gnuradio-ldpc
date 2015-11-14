@@ -39,7 +39,7 @@ class _qa_helper(gr.top_block):
         self.ext_decoder = extended_decoder(dec, threading=self.threading, ann=None,
                                            puncpat=self.puncpat, integration_period=10000)
 
-        self.src = blocks.vector_source_b(data_size*[0, 1, 2, 3, 5, 7, 9, 13, 15, 25, 31, 45, 63, 95, 127], False)
+        self.src = blocks.vector_source_b((data_size*[0, 1, 2, 3, 5, 7, 9, 13, 15, 25, 31, 45, 63, 95, 127]), False)
         self.unpack = blocks.unpack_k_bits_bb(8)
         self.map = map_bb([-1, 1])
         self.to_float = blocks.char_to_float(1)
@@ -79,7 +79,7 @@ class qa_ldpc_encode_decode (gr_unittest.TestCase):
         self.assertTrue(self.check_coders(enc, dec))
         time = timeit.timeit(functools.partial(
             self.check_coders, enc=enc, dec=dec), number=10)
-        print "ldpc time = " + str(time)
+        print "john ldpc time = " + str(time)
 
     def test_002_gnuradio_decoder(self):
         from gnuradio.fec import ldpc_encoder_make as gnuradio_ldpc_encoder

@@ -52,23 +52,17 @@ namespace gr {
 
       std::vector<float> ldpc_decoder_impl::prob_to_llr(std::vector<float> codeword)
       {
-          std::vector<float> out(codeword);
+          std::vector<float> out(codeword.size());
+          float sigma = 0.5;
           for(int i = 0; i < out.size(); i++)
           {
               float cw = codeword[i];
 
-              // Following two lines ruin test for some bizzare reason
-              if (cw < 0.0001)
-                  cw = 0.0001;
+              out[i] = (-1*cw)/(2*sigma*sigma);
 
-              if (cw > 0.9999)
-                  cw = 0.9999;
-
-              out[i] = log((1-cw)/cw);
-
-              if (i < 1)
-                fprintf(stdout, "%f, ", codeword[i]);
-              fflush(stdout);
+              /*if (i < 10)
+                fprintf(stdout, ".. %f, %f, %f \n", codeword[i], lr, out[i]);
+              fflush(stdout);*/
           }
           return out;
       }
