@@ -70,6 +70,100 @@
     </param>
   </block>
   <block>
+    <key>variable_ldpc_decoder_def</key>
+    <param>
+      <key>file</key>
+      <value>gr.prefix() + '/share/gnuradio/examples/fec/271.127.3.112'</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(224, 459)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>dec_ldpc</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>50</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>sigma</key>
+      <value>0.5</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_ldpc_encoder_def</key>
+    <param>
+      <key>file</key>
+      <value>gr.prefix() + '/share/gnuradio/examples/fec/271.127.3.112'</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 459)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>enc_ldpc</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -120,7 +214,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 243)</value>
+      <value>(224, 307)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -167,7 +261,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(128, 251)</value>
+      <value>(8, 307)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -278,6 +372,74 @@
     <bus_source>1</bus_source>
   </block>
   <block>
+    <key>fec_bercurve_generator</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decoder_list</key>
+      <value>dec_ldpc</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>encoder_list</key>
+      <value>enc_ldpc</value>
+    </param>
+    <param>
+      <key>esno</key>
+      <value>esno_0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(176, 203)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>fec_bercurve_generator_1</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>puncpat</key>
+      <value>'11'</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>35000000</value>
+    </param>
+    <param>
+      <key>threadtype</key>
+      <value>"capillary"</value>
+    </param>
+    <bus_source>1</bus_source>
+  </block>
+  <block>
     <key>import</key>
     <param>
       <key>alias</key>
@@ -336,7 +498,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 122)</value>
+      <value>(456, 140)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -596,7 +758,7 @@
     </param>
     <param>
       <key>num_curves</key>
-      <value>1</value>
+      <value>2</value>
     </param>
     <param>
       <key>update_time</key>
@@ -620,7 +782,7 @@
     <source_block_id>fec_bercurve_generator_0</source_block_id>
     <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
     <source_key>32</source_key>
-    <sink_key>32</sink_key>
+    <sink_key>64</sink_key>
   </connection>
   <connection>
     <source_block_id>fec_bercurve_generator_0</source_block_id>
@@ -813,5 +975,203 @@
     <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
     <source_key>9</source_key>
     <sink_key>9</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>32</source_key>
+    <sink_key>65</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>32</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>1</source_key>
+    <sink_key>33</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>10</source_key>
+    <sink_key>42</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>11</source_key>
+    <sink_key>43</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>12</source_key>
+    <sink_key>44</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>13</source_key>
+    <sink_key>45</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>14</source_key>
+    <sink_key>46</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>15</source_key>
+    <sink_key>47</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>16</source_key>
+    <sink_key>48</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>17</source_key>
+    <sink_key>49</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>18</source_key>
+    <sink_key>50</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>19</source_key>
+    <sink_key>51</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>2</source_key>
+    <sink_key>34</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>20</source_key>
+    <sink_key>52</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>21</source_key>
+    <sink_key>53</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>22</source_key>
+    <sink_key>54</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>23</source_key>
+    <sink_key>55</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>24</source_key>
+    <sink_key>56</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>25</source_key>
+    <sink_key>57</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>26</source_key>
+    <sink_key>58</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>27</source_key>
+    <sink_key>59</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>28</source_key>
+    <sink_key>60</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>29</source_key>
+    <sink_key>61</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>3</source_key>
+    <sink_key>35</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>30</source_key>
+    <sink_key>62</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>31</source_key>
+    <sink_key>63</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>4</source_key>
+    <sink_key>36</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>5</source_key>
+    <sink_key>37</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>6</source_key>
+    <sink_key>38</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>7</source_key>
+    <sink_key>39</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>8</source_key>
+    <sink_key>40</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_bercurve_generator_1</source_block_id>
+    <sink_block_id>qtgui_bercurve_sink_0</sink_block_id>
+    <source_key>9</source_key>
+    <sink_key>41</sink_key>
   </connection>
 </flow_graph>
