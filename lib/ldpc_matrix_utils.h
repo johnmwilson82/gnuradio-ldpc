@@ -68,19 +68,19 @@ public:
 
     ~ldpc_parity_check_matrix();
 
-    const std::vector<int> & get_indices_for_row(int row_num){  assert(row_num >= 0 && row_num < (int)d_rows.size());
+    const std::vector<int> & get_indices_for_row(int row_num){
                                 return d_rows[row_num];
                                 };
 
-    const std::vector<int> & get_indices_for_col(int col_num){  assert(col_num >= 0 && col_num < (int)d_cols.size());
+    const std::vector<int> & get_indices_for_col(int col_num){
                                 return d_cols[col_num];
                                 };
 
-    int get_number_of_indices_in_row(int row_num){      assert(row_num >= 0 && row_num < (int)d_rows.size());
+    int get_number_of_indices_in_row(int row_num){
                                 return d_rows[row_num].size();
                                 };
 
-    int get_number_of_indices_in_col(int col_num){      assert(col_num >= 0 && col_num < (int)d_cols.size());
+    int get_number_of_indices_in_col(int col_num){
                                 return d_cols[col_num].size();
                                 };
 
