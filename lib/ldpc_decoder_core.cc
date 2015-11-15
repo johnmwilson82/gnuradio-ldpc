@@ -19,9 +19,7 @@ ldpc_decoder_core::ldpc_decoder_core( const char* pcmat_filename )
     chat = vector<unsigned char> (num_cols);
     P = vector<float> (num_cols);
     eP = vector<float> (num_cols);
-    ppr = vector<float> (num_cols);
 
-    tanh_half_u = vector<float> (num_rows);
     d_was_decoded = false;
 
     num_decoded = 1;
@@ -64,46 +62,31 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         //calculate r messages
         for(int j=0; j < num_rows; j++)
         {
-            tanh_half_u[j] = 1;
+            float _tanh_half_u = 1;
             const std::vector<int> & indices = H->get_indices_for_row(j);
             for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                tanh_half_u[j] = tanh_half_u[j] * tanh(dcq[*it][j]/2.0);
-        }
+                _tanh_half_u = _tanh_half_u * tanh(dcq[*it][j]/2.0);
 
-        for(int j=0; j < num_rows; j++)
-        {
-            const std::vector<int> & indices = H->get_indices_for_row(j);
             for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
             {
-                float temp = tanh_half_u[j] / tanh(dcq[*it][j]/2.0);
-
-                if(temp == 0)
-                {
-                    temp = 1e-10;
-                }
-
+                float temp = _tanh_half_u / tanh(dcq[*it][j]/2.0);
                 dpr[*it][j] = 2 * atanh(temp);
             }
         }
 
-        ppr = P;
-
         int cwtot = 0;
         for(int i=0; i < num_cols; i++)
         {
+            float _ppr = P[i];
             const std::vector<int> & indices = H->get_indices_for_col(i);
             for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                ppr[i] += dpr[i][*it];
+                _ppr += dpr[i][*it];
 
-            if(ppr[i] < 0) chat[i] = 1; else chat[i] = 0;
+            chat[i] = (_ppr < 0.0) ? 1 : 0;
             cwtot += chat[i];
-        }
 
-        for(int i=0; i < num_cols; i++)
-        {
-            const std::vector<int> & indices = H->get_indices_for_col(i);
             for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                dcq[i][*it] = ppr[i] - dpr[i][*it];
+                dcq[i][*it] = _ppr - dpr[i][*it];
         }
 
         if(d_was_decoded)
