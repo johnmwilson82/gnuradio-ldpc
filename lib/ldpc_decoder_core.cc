@@ -65,22 +65,24 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         for(int j=0; j < num_rows; j++)
         {
             tanh_half_u[j] = 1;
-            for(int i = 0; i < H->get_number_of_indices_in_row(j); i++)
-                tanh_half_u[j] = tanh_half_u[j] * tanh(dcq[H->get_indices_for_row(j)[i]][j]/2.0);
+            const std::vector<int> & indices = H->get_indices_for_row(j);
+            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+                tanh_half_u[j] = tanh_half_u[j] * tanh(dcq[*it][j]/2.0);
         }
 
         for(int j=0; j < num_rows; j++)
         {
-            for(int a = 0; a < H->get_number_of_indices_in_row(j); a++)
+            const std::vector<int> & indices = H->get_indices_for_row(j);
+            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
             {
-                float temp = tanh_half_u[j] / tanh(dcq[H->get_indices_for_row(j)[a]][j]/2.0);
+                float temp = tanh_half_u[j] / tanh(dcq[*it][j]/2.0);
 
                 if(temp == 0)
                 {
                     temp = 1e-10;
                 }
 
-                dpr[H->get_indices_for_row(j)[a]][j] = 2 * atanh(temp);
+                dpr[*it][j] = 2 * atanh(temp);
             }
         }
 
@@ -89,16 +91,20 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         int cwtot = 0;
         for(int i=0; i < num_cols; i++)
         {
-            for(int j = 0; j < H->get_number_of_indices_in_col(i); j++)
-                ppr[i] += dpr[i][H->get_indices_for_col(i)[j]];
+            const std::vector<int> & indices = H->get_indices_for_col(i);
+            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+                ppr[i] += dpr[i][*it];
 
             if(ppr[i] < 0) chat[i] = 1; else chat[i] = 0;
             cwtot += chat[i];
         }
 
         for(int i=0; i < num_cols; i++)
-            for(int a = 0; a < H->get_number_of_indices_in_col(i); a++)
-                dcq[i][H->get_indices_for_col(i)[a]] = ppr[i] - dpr[i][H->get_indices_for_col(i)[a]];
+        {
+            const std::vector<int> & indices = H->get_indices_for_col(i);
+            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+                dcq[i][*it] = ppr[i] - dpr[i][*it];
+        }
 
         if(d_was_decoded)
             return;
