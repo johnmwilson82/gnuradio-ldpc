@@ -16,7 +16,6 @@ ldpc_decoder_core::ldpc_decoder_core( const char* pcmat_filename )
     dcq = vector< vector<float> > (num_cols, vector<float> (num_rows));
     dpr = vector< vector<float> > (num_cols, vector<float> (num_rows));
 
-    chat = vector<unsigned char> (num_cols);
     P = vector<float> (num_cols);
     eP = vector<float> (num_cols);
 
@@ -40,61 +39,71 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations)
 }
 
 void
-ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsigned char* chat)
+ldpc_decoder_core::initialize_msg()
 {
-    /*this takes a vector of LLRs as the argument codeword and performs the BP LDPC decoder algorithm
-    for num_iterations*/
-    P = codeword;
-    d_was_decoded = false;
-
-    //initialise q messages
     for(int i = 0; i < num_cols; i++)
     {
-        eP[i] = 1/(exp(P[i]) + 1);
+        //eP[i] = 1/(exp(P[i]) + 1);
         for(int a = 0; a < H->get_number_of_indices_in_col(i); a++)
             dcq[i][H->get_indices_for_col(i)[a]] = P[i];
     }
+}
+void
+ldpc_decoder_core::horizontal_step()
+{
+    for(int j=0; j < num_rows; j++)
+    {
+        float _tanh_half_u = 1;
+        const std::vector<int> & indices = H->get_indices_for_row(j);
 
+        for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+            _tanh_half_u = _tanh_half_u * tanh(dcq[*it][j]/2.0);
+
+        for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+        {
+            float temp = _tanh_half_u / tanh(dcq[*it][j]/2.0);
+            dpr[*it][j] = 2 * atanh(temp);
+        }
+    }
+}
+
+void
+ldpc_decoder_core::vertical_step(unsigned char* chat)
+{
+    for(int i=0; i < num_cols; i++)
+    {
+        float _ppr = P[i];
+        const std::vector<int> & indices = H->get_indices_for_col(i);
+        for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+            _ppr += dpr[i][*it];
+
+        chat[i] = (_ppr < 0.0) ? 1 : 0;
+
+        for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
+            dcq[i][*it] = _ppr - dpr[i][*it];
+    }
+}
+
+void
+ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsigned char* chat)
+{
+    P = codeword;
+    /*this takes a vector of LLRs as the argument codeword and performs the BP LDPC decoder algorithm
+    for num_iterations*/
+    d_was_decoded = false;
+
+    initialize_msg();
     //main decoder loop
     for(int loop = 0; loop < num_iterations; loop++)
     {
-        //horizontal step
-        //calculate r messages
-        for(int j=0; j < num_rows; j++)
-        {
-            float _tanh_half_u = 1;
-            const std::vector<int> & indices = H->get_indices_for_row(j);
-            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                _tanh_half_u = _tanh_half_u * tanh(dcq[*it][j]/2.0);
-
-            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-            {
-                float temp = _tanh_half_u / tanh(dcq[*it][j]/2.0);
-                dpr[*it][j] = 2 * atanh(temp);
-            }
-        }
-
-        int cwtot = 0;
-        for(int i=0; i < num_cols; i++)
-        {
-            float _ppr = P[i];
-            const std::vector<int> & indices = H->get_indices_for_col(i);
-            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                _ppr += dpr[i][*it];
-
-            chat[i] = (_ppr < 0.0) ? 1 : 0;
-            cwtot += chat[i];
-
-            for(std::vector<int>::const_iterator it = indices.begin(); it != indices.end(); ++it)
-                dcq[i][*it] = _ppr - dpr[i][*it];
-        }
+        horizontal_step();
+        vertical_step(chat);
 
         if(d_was_decoded)
             return;
         //---------------------------------------------------------------------------------------
         if(H->parity_check(chat) == 0)
         {
-
             //fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
             //fflush(stdout);
             num_decoded++;

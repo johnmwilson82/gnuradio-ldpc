@@ -54,5 +54,9 @@ public:
     int get_codeword_length() { return num_cols; };
     int get_number_of_checks() { return num_rows; };
 
+private:
+    void initialize_msg();
+    void horizontal_step();
+    void vertical_step(unsigned char *chat);
 };
 #endif
