@@ -22,7 +22,6 @@ ldpc_decoder_core::ldpc_decoder_core( const char* pcmat_filename )
     d_was_decoded = false;
 
     num_decoded = 1;
-
 }
 
 ldpc_decoder_core::~ldpc_decoder_core()
@@ -43,7 +42,6 @@ ldpc_decoder_core::initialize_msg()
 {
     for(int i = 0; i < num_cols; i++)
     {
-        //eP[i] = 1/(exp(P[i]) + 1);
         for(int a = 0; a < H->get_number_of_indices_in_col(i); a++)
             dcq[i][H->get_indices_for_col(i)[a]] = P[i];
     }
@@ -101,11 +99,9 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
 
         if(d_was_decoded)
             return;
-        //---------------------------------------------------------------------------------------
+
         if(H->parity_check(chat) == 0)
         {
-            //fprintf(stdout, "Solved LDPC packet %d in %d iterations (%d 1-bits).\n", num_decoded, loop + 1, cwtot);
-            //fflush(stdout);
             num_decoded++;
             d_was_decoded = true;
             //TODO: need to output posterior probs
@@ -114,9 +110,6 @@ ldpc_decoder_core::decode_ldpc(vector<float> codeword, int num_iterations, unsig
         }
 
     }
-    //fprintf(stdout, "Failed decoding LDPC packet %d\n", num_decoded);
-    //fflush(stdout);
     d_was_decoded = false;
-
 }
 
